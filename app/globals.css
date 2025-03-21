@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 7%; /* #121212 */
+    --foreground: 0 0% 98%; /* text-white */
+    --card: 0 0% 10%; /* #1a1a1a */
+    --card-foreground: 0 0% 98%; /* text-white */
+    --popover: 0 0% 7%; /* #121212 */
+    --popover-foreground: 0 0% 98%; /* text-white */
+    --primary: 160 84.1% 39.4%; /* #10B981 */
+    --primary-foreground: 0 0% 0%; /* text-black */
+    --secondary: 0 0% 13%; /* #222222 */
+    --secondary-foreground: 0 0% 98%; /* text-white */
+    --muted: 0 0% 13%; /* #222222 */
+    --muted-foreground: 0 0% 64%; /* text-gray-400 */
+    --accent: 160 84.1% 39.4%; /* #10B981 */
+    --accent-foreground: 0 0% 0%; /* text-black */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%; /* border-gray-800 */
+    --input: 0 0% 20%; /* border-gray-800 */
+    --ring: 160 84.1% 39.4%; /* #10B981 */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 7%; /* #121212 */
+    --foreground: 0 0% 98%; /* text-white */
+    --card: 0 0% 10%; /* #1a1a1a */
+    --card-foreground: 0 0% 98%; /* text-white */
+    --popover: 0 0% 7%; /* #121212 */
+    --popover-foreground: 0 0% 98%; /* text-white */
+    --primary: 160 84.1% 39.4%; /* #10B981 */
+    --primary-foreground: 0 0% 0%; /* text-black */
+    --secondary: 0 0% 13%; /* #222222 */
+    --secondary-foreground: 0 0% 98%; /* text-white */
+    --muted: 0 0% 13%; /* #222222 */
+    --muted-foreground: 0 0% 64%; /* text-gray-400 */
+    --accent: 160 84.1% 39.4%; /* #10B981 */
+    --accent-foreground: 0 0% 0%; /* text-black */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%; /* border-gray-800 */
+    --input: 0 0% 20%; /* border-gray-800 */
+    --ring: 160 84.1% 39.4%; /* #10B981 */
+  }
+
+  .light {
+    --background: 0 0% 100%; /* white */
+    --foreground: 0 0% 10%; /* darker text for better contrast in light mode */
+    --card: 0 0% 98%; /* #fafafa */
+    --card-foreground: 0 0% 10%; /* darker text for better contrast */
+    --popover: 0 0% 100%; /* white */
+    --popover-foreground: 0 0% 10%; /* darker text for better contrast */
+    --primary: 160 70% 30%; /* darker green for better contrast in light mode */
+    --primary-foreground: 0 0% 100%; /* white */
+    --secondary: 0 0% 92%; /* #ebebeb - slightly darker for better contrast */
+    --secondary-foreground: 0 0% 10%; /* #1a1a1a - darker text for better contrast */
+    --muted: 0 0% 92%; /* #ebebeb */
+    --muted-foreground: 0 0% 40%; /* darker muted foreground for better contrast */
+    --accent: 160 70% 30%; /* darker green for better contrast */
+    --accent-foreground: 0 0% 100%; /* white */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 80%; /* darker border for better contrast */
+    --input: 0 0% 80%; /* darker input border for better contrast */
+    --ring: 160 70% 30%; /* darker ring color for better contrast */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4,
+  .dark h5,
+  .dark h6 {
+    @apply text-white;
+  }
+  
+  .light h1,
+  .light h2,
+  .light h3,
+  .light h4,
+  .light h5,
+  .light h6 {
+    @apply text-gray-900;
+  }
+  
+  /* Light mode specific styles for better contrast */
+  .light .text-gray-300 {
+    @apply text-gray-700;
+  }
+  
+  .light .text-gray-500 {
+    @apply text-gray-600;
+  }
+}
+
+@font-face {
+  font-family: "Signature";
+  src: url("/fonts/signature.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-signature {
+  font-family: "Signature", cursive;
+}
+
+/* Custom styles for the portfolio */
+@layer components {
+  .section-heading {
+    @apply font-bold;
+  }
+
+  .section-number {
+    @apply text-primary text-xl mb-2;
+  }
+
+  .section-dots {
+    @apply flex space-x-2;
+  }
+
+  .section-dot {
+    @apply w-3 h-3 rounded-full transition-all duration-300;
+  }
+
+  .section-dot-active {
+    @apply bg-primary;
+    box-shadow: 0 0 8px 2px hsl(var(--primary) / 0.5);
+  }
+
+  .section-dot-inactive {
+    @apply bg-gray-700;
+  }
+  
+  .dark .section-dot-inactive {
+    @apply bg-gray-700;
+  }
+  
+  .light .section-dot-inactive {
+    @apply bg-gray-300;
+  }
+
+  .highlight-text {
+    @apply text-primary;
+  }
+
+  /* Project section labels */
+  h4.text-primary {
+    @apply font-medium;
+    color: hsl(var(--primary)) !important;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:border-primary/50;
+  }
+
+  .glass-effect {
+    @apply bg-background/80 backdrop-blur-md border-b border-border/50;
+  }
+
+  .tech-tag {
+    @apply bg-secondary text-secondary-foreground px-4 py-2 rounded-full text-sm transition-colors border border-transparent;
+  }
+  
+  .dark .tech-tag:hover {
+    @apply bg-secondary/80 border-primary/50;
+  }
+  
+  .light .tech-tag:hover {
+    @apply bg-gray-200 border-primary/50;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-md transition-colors font-medium flex items-center;
+  }
+
+  .btn-secondary {
+    @apply border border-border hover:border-primary text-foreground px-6 py-3 rounded-md transition-colors font-medium;
+  }
+
+  .input-field {
+    @apply w-full bg-transparent border border-border rounded-md px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors;
+  }
+
+  .social-icon {
+    @apply text-gray-500 hover:text-primary transition-colors;
+  }
+
+  .nav-link {
+    @apply hover:text-gray-500 transition-colors uppercase font-medium;
+  }
+
+  .nav-link-active {
+    @apply text-primary hover:text-primary/90 transition-colors uppercase font-medium;
+  }
+
+  /* Tube light effect */
+  .tube-light {
+    @apply relative;
+  }
+
+  .tube-light::after {
+    content: "";
+    @apply absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full opacity-0 transition-all duration-300;
+    box-shadow: 0 0 8px 1px hsl(var(--primary));
+  }
+
+  .tube-light.active::after,
+  .tube-light:hover::after {
+    @apply opacity-100;
+  }
+}
+
+/* Timeline styles */
+.timeline-dot {
+  @apply absolute left-0 w-3 h-3 bg-primary rounded-full;
+  box-shadow: 0 0 8px 1px hsl(var(--primary) / 0.5);
+}
+
+.timeline-line {
+  @apply absolute left-0 w-px h-full bg-border;
+}
+
+/* Timeline responsive fixes for mobile */
+@media (max-width: 768px) {
+  /* Timeline dots and lines for mobile */
+  .timeline-dot {
+    transform: translateX(0) !important;
+    left: -1rem !important;
+    z-index: 2;
+  }
+  
+  .timeline-line {
+    transform: translateX(0) !important;
+    left: -0.75rem !important;
+    z-index: 1;
+  }
+}
+
