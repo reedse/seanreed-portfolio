@@ -35,7 +35,7 @@ export function MobileMenu({ activeSection, onSectionChange }: MobileMenuProps) 
     <div className="md:hidden">
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="text-white p-2"
+        className="text-foreground p-2"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         aria-label="Open menu"
@@ -69,7 +69,7 @@ export function MobileMenu({ activeSection, onSectionChange }: MobileMenuProps) 
               <div className="flex justify-end p-4">
                 <motion.button
                   onClick={() => setIsOpen(false)}
-                  className="text-white p-2"
+                  className="text-foreground p-2"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Close menu"
