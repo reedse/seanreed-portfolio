@@ -5,8 +5,62 @@ import Link from "next/link"
 import { Twitter, Linkedin, Github, Mail, Code, MoveRight, MoveLeft, Grid, ArrowRight, ArrowDown, Send, SendHorizonal, Forward } from "lucide-react"
 import { motion } from "framer-motion"
 import AnimatedSection from "@/components/animated-section"
+import { useState } from "react"
 
 export default function Home() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  })
+  const [status, setStatus] = useState<{
+    type: "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setStatus({ type: null, message: "" })
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong")
+      }
+
+      setStatus({
+        type: "success",
+        message: "Message sent successfully! I'll get back to you soon.",
+      })
+      setFormData({ name: "", email: "", message: "" })
+    } catch (error) {
+      setStatus({
+        type: "error",
+        message: error instanceof Error ? error.message : "Failed to send message. Please try again.",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <div className="h-16"></div> {/* Spacer for fixed navbar */}
@@ -29,8 +83,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                Self-taught full-stack developer passionate about building innovative solutions and exceptional digital
-                experiences.
+                Final year computer science student at <Link href="https://brocku.ca/" className="text-primary hover:underline">Brock University</Link>. Passion for building solutions to real-world problems.
               </motion.p>
 
               <motion.div
@@ -54,7 +107,7 @@ export default function Home() {
                 </motion.div>
 
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
-                  <Link href="/seanreed_resume.pdf" className="btn-secondary w-full sm:w-auto inline-flex justify-center">
+                  <Link href="/seanreed_resume.pdf" target="_blank" rel="noopener noreferrer" className="btn-secondary w-full sm:w-auto inline-flex justify-center">
                     View resume
                   </Link>
                 </motion.div>
@@ -199,11 +252,11 @@ export default function Home() {
               </div>
 
               <motion.div
-                className="relative rounded-lg overflow-hidden border border-border bg-card group h-[400px]"
+                className="relative rounded-lg overflow-hidden border border-border bg-card group h-[300px] md:h-[400px]"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
-                <Link href="/projects">
+                <Link href="https://www.vannoordpropertymaintenance.com/" target="_blank" rel="noopener noreferrer">
                   <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
                   <picture>
                     <source
@@ -215,7 +268,7 @@ export default function Home() {
                       alt="Vannoord Property Maintenance"
                       width={1200}
                       height={630}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </picture>
                 </Link>
@@ -250,7 +303,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h4 className="text-primary uppercase text-sm font-medium mb-2">CLIENT</h4>
-                    <p>Personal Project</p>
+                    <p>Personal</p>
                   </div>
                 </div>
 
@@ -320,11 +373,11 @@ export default function Home() {
               </div>
 
               <motion.div
-                className="relative rounded-lg overflow-hidden border border-border bg-card group h-[400px]"
+                className="relative rounded-lg overflow-hidden border border-border bg-card group h-[300px] md:h-[400px]"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
-                <Link href="/projects">
+                <Link href="https://quiznator.ca" target="_blank" rel="noopener noreferrer">
                   <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
                   <picture>
                     <source
@@ -336,7 +389,7 @@ export default function Home() {
                       alt="Quiznator"
                       width={1200}
                       height={630}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </picture>
                 </Link>
@@ -380,10 +433,6 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                As a self-taught junior full-stack developer, I've quickly progressed from learning the basics to
-                building complex SaaS applications. My passion lies in creating innovative solutions that solve
-                real-world problems, combining clean code with beautiful design to deliver exceptional digital
-                experiences.
               </motion.p>
 
               <motion.div
@@ -394,8 +443,17 @@ export default function Home() {
               >
                 <h3 className="text-xl font-bold text-white mb-3">Education</h3>
                 <div className="mb-6">
-                  <p className="text-white font-medium">BROCK UNIVERSITY</p>
-                  <p className="text-gray-300">Bachelor of Science in Computer Science - April 2025</p>
+                  <div className="flex items-center gap-4 mb-2">
+                    <Image
+                      src="/brock-logo.PNG"
+                      alt="Brock University Logo"
+                      width={80}
+                      height={80}
+                      className="object-contain"
+                    />
+                    <p className="text-primary uppercase text-sm font-medium">BROCK UNIVERSITY</p>
+                  </div>
+                  <p className="text-gray-300">Bachelor of Science in Computer Science</p>
                 </div>
               </motion.div>
 
@@ -540,41 +598,6 @@ export default function Home() {
                       className="tech-tag"
                       whileHover={{ scale: 1.05 }}
                     >
-                      Clerk
-                    </motion.span>
-                    <motion.span
-                      className="tech-tag"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      Stripe
-                    </motion.span>
-                    <motion.span
-                      className="tech-tag"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      React Query
-                    </motion.span>
-                    <motion.span
-                      className="tech-tag"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      Zustand
-                    </motion.span>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.7 }}
-                >
-                  <p className="text-primary uppercase text-sm font-medium mb-3">Developer Tools</p>
-                  <div className="flex flex-wrap gap-2">
-                    <motion.span
-                      className="tech-tag"
-                      whileHover={{ scale: 1.05 }}
-                    >
                       Git
                     </motion.span>
                     <motion.span
@@ -595,20 +618,11 @@ export default function Home() {
                     >
                       Cypress
                     </motion.span>
-                    <motion.span
-                      className="tech-tag"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      Zod
-                    </motion.span>
-                    <motion.span
-                      className="tech-tag"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      Postman
-                    </motion.span>
+                    
                   </div>
                 </motion.div>
+
+                
               </div>
             </div>
 
@@ -647,7 +661,7 @@ export default function Home() {
                   <div className="absolute left-0 w-3 h-3 bg-primary rounded-full -translate-x-7 translate-y-1 timeline-dot"></div>
                   <div className="absolute left-0 w-px h-full bg-border -translate-x-6 translate-y-4 timeline-line"></div>
                   <div>
-                    <p className="text-primary">2023 - 2024</p>
+                    <p className="text-primary">2024 - Present</p>
                     <h4 className="text-xl font-bold mt-1">SaaS Developer</h4>
                     <p className="text-gray-500 mt-1">Personal Projects</p>
                     <p className="text-gray-300 mt-3">
@@ -668,12 +682,11 @@ export default function Home() {
                   <div className="absolute left-0 w-3 h-3 bg-primary rounded-full -translate-x-7 translate-y-1 timeline-dot"></div>
                   <div className="absolute left-0 w-px h-[85%] bg-border -translate-x-6 translate-y-4 timeline-line"></div>
                   <div>
-                    <p className="text-primary">2023</p>
+                    <p className="text-primary">2020</p>
                     <h4 className="text-xl font-bold text-white mt-1">Computer Science Student</h4>
-                    <p className="text-gray-500 mt-1">Brock University 2021 - 2025</p>
+                    <p className="text-gray-500 mt-1">Brock University 2020 - 2025</p>
                     <p className="text-gray-300 mt-3">
-                      Started my web development journey, focusing on modern technologies and best practices. Built
-                      several projects to strengthen my skills in both frontend and backend development.
+                      Started my software development journey, focusing on modern technologies and best practices. With core fundamentals such as data structures, algorithms, databases and more.
                     </p>
                   </div>
                 </motion.div>
@@ -711,7 +724,7 @@ export default function Home() {
 
               <p className="text-gray-300 mb-10">
                 Have a project in mind? I'd love to hear about it. Send me a message and let's discuss how we can work
-                together to bring your ideas to life.
+                together to make it a reality.
               </p>
 
               <div className="mb-8">
@@ -719,7 +732,7 @@ export default function Home() {
                 <div className="flex space-x-4">
                   <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                     <Link
-                      href="https://linkedin.com"
+                      href="https://linkedin.com/in/reed-sean"
                       className="bg-secondary p-3 rounded-md hover:bg-secondary/80 hover:border-primary border border-transparent transition-colors text-foreground inline-block"
                     >
                       <Linkedin size={20} />
@@ -735,14 +748,22 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.3 }}
                 >
-                  <input type="text" placeholder="Your Name" className="input-field" />
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your Name"
+                    className="input-field"
+                    required
+                  />
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -750,7 +771,15 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.4 }}
                 >
-                  <input type="email" placeholder="Your Email" className="input-field" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Your Email"
+                    className="input-field"
+                    required
+                  />
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -758,8 +787,27 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.5 }}
                 >
-                  <textarea placeholder="Your Message" rows={6} className="input-field resize-none"></textarea>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Your Message"
+                    rows={6}
+                    className="input-field resize-none"
+                    required
+                  ></textarea>
                 </motion.div>
+                {status.type && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`p-4 rounded-md ${
+                      status.type === "success" ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"
+                    }`}
+                  >
+                    {status.message}
+                  </motion.div>
+                )}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -768,8 +816,12 @@ export default function Home() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  <button type="submit" className="btn-primary">
-                    Submit
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Sending..." : "Submit"}
                     <ArrowRight className="ml-2" size={18} />
                   </button>
                 </motion.div>
@@ -787,45 +839,31 @@ export default function Home() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex space-x-4">
             <motion.div whileHover={{ scale: 1.2, y: -3 }}>
-              <Link href="https://twitter.com" className="social-icon">
-                <Twitter size={18} />
-              </Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.2, y: -3 }}>
-              <Link href="https://linkedin.com" className="social-icon">
+              <Link href="https://linkedin.com/in/reed-sean" className="social-icon">
                 <Linkedin size={18} />
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.2, y: -3 }}>
-              <Link href="https://github.com" className="social-icon">
+              <Link href="https://github.com/reedse" className="social-icon">
                 <Github size={18} />
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
               <Link
-                href="mailto:contact@example.com"
-                className="bg-secondary p-3 rounded-md hover:bg-secondary/80 hover:border-primary border border-transparent transition-colors text-foreground inline-block"
+                href="mailto:reedse.brocku@gmail.com"
+                className="social-icon"
               >
-                <Mail size={20} />
+                <Mail size={18} />
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.2, y: -3 }}>
-              <Link href="/code" className="social-icon">
+              <Link href="https://github.com/reedse/seanreed-portfolio" className="social-icon">
                 <Code size={18} />
               </Link>
             </motion.div>
           </div>
 
           <div className="text-gray-500 text-sm">© 2025 Sean Reed. All rights reserved.</div>
-
-          <div className="flex space-x-2">
-            <motion.button className="social-icon" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}>
-              <MoveLeft size={18} />
-            </motion.button>
-            <motion.button className="social-icon" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}>
-              <MoveRight size={18} />
-            </motion.button>
-          </div>
         </div>
       </motion.footer>
     </div>
